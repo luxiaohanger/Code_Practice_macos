@@ -1,0 +1,5 @@
+add_executable(scc scc.cpp)
+add_executable(ebcc ebcc.cpp)
+add_executable(bcc bcc.cpp)
+add_executable(reducecc reduceCC.cpp)
+add_executable(p1027 P1027.cpp)

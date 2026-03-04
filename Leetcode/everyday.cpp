@@ -33,8 +33,33 @@ int minSwaps(vector<vector<int> > &grid) {
 char findKthBit(int n, int k) {
     if (n == 1)return '0';
     int l = (int) pow(2, n) - 1;
-    int ls = (int) pow(2,n-1) - 1;
+    int ls = (int) pow(2, n - 1) - 1;
     if (k == (l + 1) / 2)return '1';
     if (k < (l + 1) / 2)return findKthBit(n - 1, k);
     return findKthBit(n - 1, ls - k + (l + 1) / 2 + 1) == '0' ? '1' : '0';
+}
+
+//1582
+int numSpecial(vector<vector<int> > &mat) {
+    int n = mat.size();
+    int m = mat[0].size();
+    vector<int> cnt1(n);
+    vector<int> cnt2(m);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (mat[i][j] == 1) {
+                cnt1[i]++;
+                cnt2[j]++;
+            }
+        }
+    }
+    int res = 0;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (mat[i][j] == 1 && cnt1[i] == 1 && cnt2[j] == 1) {
+                res++;
+            }
+        }
+    }
+    return res;
 }

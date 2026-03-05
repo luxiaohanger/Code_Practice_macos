@@ -63,3 +63,19 @@ int numSpecial(vector<vector<int> > &mat) {
     }
     return res;
 }
+
+//1758
+int minOperations(string s) {
+    int n = s.size();
+    int cnt1 = 0;
+    int cnt2 = 0;
+    int c1 = 1;
+    int c2 = 0;
+    for (int i = 0; i < n; ++i) {
+        if (s[i] - '0' == c1)cnt1++;
+        c1 = c1 == 0 ? 1 : 0;
+        if (s[i] - '0' == c2)cnt2++;
+        c2 = c2 == 0 ? 1 : 0;
+    }
+    return min(cnt1,cnt2);
+}

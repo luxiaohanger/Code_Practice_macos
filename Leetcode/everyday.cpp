@@ -79,3 +79,43 @@ int minOperations(string s) {
     }
     return min(cnt1,cnt2);
 }
+
+//3212
+int numberOfSubmatrices(vector<vector<char>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<pii>> dp(n,vector<pii>(m));
+    if (grid[0][0] == 'X')dp[0][0] = {1,0};
+    else if (grid[0][0] == 'Y')dp[0][0] = {0,1};
+    else dp[0][0] = {0,0};
+
+    for (int i = 1;i<n;++i) {
+        dp[i][0] = dp[i - 1][0];
+        if (grid[i][0] == 'X')dp[i][0].first++;
+        else if (grid[i][0] == 'Y')dp[i][0].second++;
+    }
+
+    for (int j = 1;j<m;++j) {
+        dp[0][j] = dp[0][j - 1];
+        if (grid[0][j] == 'X')dp[0][j].first++;
+        else if (grid[0][j] == 'Y')dp[0][j].second++;
+    }
+
+
+    for (int i = 1;i<n;++i) {
+        for (int j = 1;j<m;++j) {
+            dp[i][j].first = dp[i][j - 1].first + dp[i - 1][j].first - dp[i - 1][j - 1].first;
+            dp[i][j].second = dp[i][j - 1].second + dp[i - 1][j].second - dp[i - 1][j - 1].second;
+            if (grid[i][j] == 'X')dp[i][j].first++;
+            else if (grid[i][j] == 'Y')dp[i][j].second++;
+        }
+    }
+
+    int cnt = 0;
+    for (int i = 0;i<n;++i) {
+        for (int j = 0;j<m;++j) {
+            if (dp[i][j].first == dp[i][j].second && dp[i][j].first != 0)cnt++;
+        }
+    }
+    return cnt;
+}

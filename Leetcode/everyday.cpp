@@ -119,3 +119,34 @@ int numberOfSubmatrices(vector<vector<char>>& grid) {
     }
     return cnt;
 }
+
+//2906
+vector<vector<int>> constructProductMatrix(vector<vector<int>>& grid) {
+    int m = grid[0].size();
+    int n = grid.size();
+    vector<int> prefix(m * n);
+    prefix[0] = 1;
+    for (int i = 0;i<n;++i) {
+        for (int j = 0;j<m;++j) {
+            if (i == n-1 && j == m - 1)break;
+            prefix[i * m + j + 1] = (prefix[i * m + j] * (grid[i][j] % 12345))%12345;
+        }
+    }
+
+    vector<int> suffix(m * n);
+    suffix[m * n - 1] = 1;
+    for (int i = n - 1;i>=0;--i) {
+        for (int j = m - 1;j>=0;--j) {
+            if (i == 0 && j == 0)break;
+            suffix[i * m + j - 1] = (suffix[i * m + j] * (grid[i][j] % 12345)) % 12345;
+        }
+    }
+
+    vector<vector<int>> ans(n,vector<int>(m));
+    for (int i = 0;i<n;++i) {
+        for (int j = 0;j<m;++j) {
+            ans[i][j] = (prefix[i * m + j] * suffix[i * m +j]) % 12345;
+        }
+    }
+    return ans;
+}

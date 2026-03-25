@@ -150,3 +150,32 @@ vector<vector<int>> constructProductMatrix(vector<vector<int>>& grid) {
     }
     return ans;
 }
+
+//3546
+bool canPartitionGrid(vector<vector<int>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<ull> ans;
+    ull sum = 0;
+    for (int i = 0;i<n;++i) {
+        for (int j = 0;j<m;++j) {
+            sum += grid[i][j];
+        }
+        ans .push_back(sum);
+    }
+
+    sum = 0;
+    for (int j = 0;j<m;++j) {
+        for (int i = 0;i<n;++i) {
+            sum += grid[i][j];
+        }
+        ans.push_back(sum);
+    }
+
+    if (sum % 2 == 1)return false;
+    sum /= 2;
+    for (const auto& x:ans) {
+        if (x == sum)return true;
+    }
+    return false;
+}

@@ -77,33 +77,33 @@ int minOperations(string s) {
         if (s[i] - '0' == c2)cnt2++;
         c2 = c2 == 0 ? 1 : 0;
     }
-    return min(cnt1,cnt2);
+    return min(cnt1, cnt2);
 }
 
 //3212
-int numberOfSubmatrices(vector<vector<char>>& grid) {
+int numberOfSubmatrices(vector<vector<char> > &grid) {
     int n = grid.size();
     int m = grid[0].size();
-    vector<vector<pii>> dp(n,vector<pii>(m));
-    if (grid[0][0] == 'X')dp[0][0] = {1,0};
-    else if (grid[0][0] == 'Y')dp[0][0] = {0,1};
-    else dp[0][0] = {0,0};
+    vector<vector<pii> > dp(n, vector<pii>(m));
+    if (grid[0][0] == 'X')dp[0][0] = {1, 0};
+    else if (grid[0][0] == 'Y')dp[0][0] = {0, 1};
+    else dp[0][0] = {0, 0};
 
-    for (int i = 1;i<n;++i) {
+    for (int i = 1; i < n; ++i) {
         dp[i][0] = dp[i - 1][0];
         if (grid[i][0] == 'X')dp[i][0].first++;
         else if (grid[i][0] == 'Y')dp[i][0].second++;
     }
 
-    for (int j = 1;j<m;++j) {
+    for (int j = 1; j < m; ++j) {
         dp[0][j] = dp[0][j - 1];
         if (grid[0][j] == 'X')dp[0][j].first++;
         else if (grid[0][j] == 'Y')dp[0][j].second++;
     }
 
 
-    for (int i = 1;i<n;++i) {
-        for (int j = 1;j<m;++j) {
+    for (int i = 1; i < n; ++i) {
+        for (int j = 1; j < m; ++j) {
             dp[i][j].first = dp[i][j - 1].first + dp[i - 1][j].first - dp[i - 1][j - 1].first;
             dp[i][j].second = dp[i][j - 1].second + dp[i - 1][j].second - dp[i - 1][j - 1].second;
             if (grid[i][j] == 'X')dp[i][j].first++;
@@ -112,8 +112,8 @@ int numberOfSubmatrices(vector<vector<char>>& grid) {
     }
 
     int cnt = 0;
-    for (int i = 0;i<n;++i) {
-        for (int j = 0;j<m;++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
             if (dp[i][j].first == dp[i][j].second && dp[i][j].first != 0)cnt++;
         }
     }
@@ -121,52 +121,52 @@ int numberOfSubmatrices(vector<vector<char>>& grid) {
 }
 
 //2906
-vector<vector<int>> constructProductMatrix(vector<vector<int>>& grid) {
+vector<vector<int> > constructProductMatrix(vector<vector<int> > &grid) {
     int m = grid[0].size();
     int n = grid.size();
     vector<int> prefix(m * n);
     prefix[0] = 1;
-    for (int i = 0;i<n;++i) {
-        for (int j = 0;j<m;++j) {
-            if (i == n-1 && j == m - 1)break;
-            prefix[i * m + j + 1] = (prefix[i * m + j] * (grid[i][j] % 12345))%12345;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            if (i == n - 1 && j == m - 1)break;
+            prefix[i * m + j + 1] = (prefix[i * m + j] * (grid[i][j] % 12345)) % 12345;
         }
     }
 
     vector<int> suffix(m * n);
     suffix[m * n - 1] = 1;
-    for (int i = n - 1;i>=0;--i) {
-        for (int j = m - 1;j>=0;--j) {
+    for (int i = n - 1; i >= 0; --i) {
+        for (int j = m - 1; j >= 0; --j) {
             if (i == 0 && j == 0)break;
             suffix[i * m + j - 1] = (suffix[i * m + j] * (grid[i][j] % 12345)) % 12345;
         }
     }
 
-    vector<vector<int>> ans(n,vector<int>(m));
-    for (int i = 0;i<n;++i) {
-        for (int j = 0;j<m;++j) {
-            ans[i][j] = (prefix[i * m + j] * suffix[i * m +j]) % 12345;
+    vector<vector<int> > ans(n, vector<int>(m));
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            ans[i][j] = (prefix[i * m + j] * suffix[i * m + j]) % 12345;
         }
     }
     return ans;
 }
 
 //3546
-bool canPartitionGrid(vector<vector<int>>& grid) {
+bool canPartitionGrid(vector<vector<int> > &grid) {
     int n = grid.size();
     int m = grid[0].size();
     vector<ull> ans;
     ull sum = 0;
-    for (int i = 0;i<n;++i) {
-        for (int j = 0;j<m;++j) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
             sum += grid[i][j];
         }
-        ans .push_back(sum);
+        ans.push_back(sum);
     }
 
     sum = 0;
-    for (int j = 0;j<m;++j) {
-        for (int i = 0;i<n;++i) {
+    for (int j = 0; j < m; ++j) {
+        for (int i = 0; i < n; ++i) {
             sum += grid[i][j];
         }
         ans.push_back(sum);
@@ -174,8 +174,36 @@ bool canPartitionGrid(vector<vector<int>>& grid) {
 
     if (sum % 2 == 1)return false;
     sum /= 2;
-    for (const auto& x:ans) {
+    for (const auto &x: ans) {
         if (x == sum)return true;
     }
     return false;
+}
+
+//2839
+bool canBeEqual(string s1, string s2) {
+    bool t1 = s1[0] == s2[0] && s1[2] == s2[2];
+    bool t2 = s1[0] == s2[2] && s1[2] == s2[0];
+    bool t3 = s1[1] == s2[1] && s1[3] == s2[3];
+    bool t4 = s1[1] == s2[3] && s1[3] == s2[1];
+    return (t1 || t2) && (t3 || t4);
+}
+
+//560
+int subarraySum(vector<int> &nums, int k) {
+    int n = nums.size();
+    vector<int> prefix(n);
+    prefix[0] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        prefix[i] = nums[i] + prefix[i - 1];
+    }
+
+    int ans = 0;
+    unordered_map<int,int> umap;
+    for (int i = 0;i<n;++i) {
+        if (prefix[i] == k)ans++;
+        if (umap.find(prefix[i] - k) != umap.end())ans += umap[prefix[i] - k];
+        umap[prefix[i]]++;
+    }
+    return ans;
 }

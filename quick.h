@@ -44,9 +44,9 @@ struct DSU {
     vector<int> pa;
     vector<int> sz;
 
-    DSU(int x):n(x + 1),pa(n),sz(n,1) {
-        for(int i= 0;i<=n;++i) {
-           pa[i] = i;
+    DSU(int x) : n(x), pa(x + 1), sz(x + 1, 1) {
+        for (int i = 0; i <= n; ++i) {
+            pa[i] = i;
         }
     }
 
@@ -54,15 +54,14 @@ struct DSU {
         return x == pa[x] ? x : pa[x] = find(pa[x]);
     }
 
-    void unite(int x,int y) {
+    void unite(int x, int y) {
         x = find(x);
         y = find(y);
         if (x == y)return;
-        if (sz[x] < sz[y])swap(x,y);
+        if (sz[x] < sz[y])swap(x, y);
         pa[y] = x;
         sz[x] += sz[y];
     }
-
 };
 
 
@@ -71,9 +70,15 @@ struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+
+    TreeNode() : val(0), left(nullptr), right(nullptr) {
+    }
+
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {
+    }
+
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {
+    }
 };
 
 

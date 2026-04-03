@@ -54,6 +54,36 @@ int longestConsecutive(vector<int> &nums) {
     return ans;
 }
 
+//283
+void moveZeroes(vector<int> &nums) {
+    int low = 0;
+    int n = nums.size();
+    for (int i = 0; i < n; ++i) {
+        if (nums[i] != 0) {
+            nums[low] = nums[i];
+            low++;
+        }
+    }
+    while (low < n)nums[low++] = 0;
+    return;
+}
+
+//11
+int maxArea(vector<int> &height) {
+    int l = 0;
+    int r = height.size() - 1;
+    int ans = 0;
+    while (r - l > 0) {
+        ans = max(ans, (r - l) * min(height[l], height[r]));
+        if (height[l] < height[r]) {
+            l++;
+        } else {
+            r--;
+        }
+    }
+    return ans;
+}
+
 int main() {
     vector<string> in{"eat", "tea", "tan", "ate", "nat", "bat"};
     auto ans = groupAnagrams(in);

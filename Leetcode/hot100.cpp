@@ -84,8 +84,38 @@ int maxArea(vector<int> &height) {
     return ans;
 }
 
+//15
+//为了确定不重复的答案，用三个数的大小关系保证，a < b < c && nums[a]<=nums[b]<=nums[c]
+//检索答案时确保每个位置的数和上一次不一样，保证唯一答案
+//a确定时，bc使用双指针寻找，根据nums[a]+nums[b]+nums[c]和0的大小关系，唯一确定指针移动方向
+//只要步骤中设计修改下标，那么就一定要注意检查合理下标范围
+vector<vector<int> > threeSum(vector<int> &nums) {
+    sort(nums.begin(), nums.end());
+    vector<vector<int> > ans;
+    int n = nums.size();
+    for (int a = 0; a <= n - 3; ++a) {
+        if (a != 0 && nums[a] == nums[a - 1])continue;
+        int b = a + 1;
+        int c = n - 1;
+        while (b < c) {
+            if (nums[a] + nums[b] + nums[c] > 0) {
+                c--;
+                while (b < c && nums[c] == nums[c + 1])c--;
+            } else if (nums[a] + nums[b] + nums[c] < 0) {
+                b++;
+                while (b < c && nums[b] == nums[b - 1])b++;
+            } else {
+                ans.push_back({nums[a], nums[b], nums[c]});
+                b++;
+                while (b < c && nums[b] == nums[b - 1])b++;
+            }
+        }
+    }
+    return ans;
+}
+
 int main() {
-    vector<string> in{"eat", "tea", "tan", "ate", "nat", "bat"};
-    auto ans = groupAnagrams(in);
+    vector<int> nums = {-1, 0, 1, 2, -1, -4};
+    auto res = threeSum(nums);
     return 0;
 }

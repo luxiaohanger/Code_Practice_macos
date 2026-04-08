@@ -114,6 +114,31 @@ vector<vector<int> > threeSum(vector<int> &nums) {
     return ans;
 }
 
+//42
+int trap(vector<int> &height) {
+    int n = height.size();
+    //每个位置雨水的高度是左右两侧最高高度的较小值
+    //使用动态规划预处理获得每个位置的高度
+    vector<int> maxleft(n);
+    vector<int> maxright(n);
+    maxleft[0] = 0;
+    maxright[n - 1];
+    for (int i = 1; i < n; ++i) {
+        maxleft[i] = max(maxleft[i - 1], height[i - 1]);
+    }
+    for (int i = n - 2; i >= 0; --i) {
+        maxright[i] = max(maxright[i + 1], height[i + 1]);
+    }
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {
+        int val = min(maxleft[i], maxright[i]);
+        if (val > height[i]) {
+            ans += val - height[i];
+        }
+    }
+    return ans;
+}
+
 int main() {
     vector<int> nums = {-1, 0, 1, 2, -1, -4};
     auto res = threeSum(nums);

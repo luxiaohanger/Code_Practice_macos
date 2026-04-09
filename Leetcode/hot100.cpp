@@ -139,8 +139,32 @@ int trap(vector<int> &height) {
     return ans;
 }
 
+//3
+//子串问题可以用滑动窗口判定，当不符合条件时调整左端
+//用hashmap维护信息
+int lengthOfLongestSubstring(string s) {
+    int n = s.size();
+    int ans = 0;
+    unordered_map<char, int> ump;
+    int left = 0;
+
+    for (int right = 0; right < n; ++right) {
+        if (!ump.contains(s[right])) {
+            ans = max(right - left + 1, ans);
+        } else {
+            int t = ump[s[right]] + 1;
+            while (left < t) {
+                ump.erase(s[left]);
+                ++left;
+            }
+        }
+        ump[s[right]] = right;
+    }
+    return ans;
+}
+
 int main() {
-    vector<int> nums = {-1, 0, 1, 2, -1, -4};
-    auto res = threeSum(nums);
+    string s = " ";
+    auto res = lengthOfLongestSubstring(s);
     return 0;
 }

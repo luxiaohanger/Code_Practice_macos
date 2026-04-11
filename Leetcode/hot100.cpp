@@ -163,6 +163,29 @@ int lengthOfLongestSubstring(string s) {
     return ans;
 }
 
+//438
+vector<int> findAnagrams(string s, string p) {
+    int n = s.size();
+    int l = p.size();
+    vector<int> ans;
+    if (n < l)return ans;
+    vector<int> now(26);
+    vector<int> target(26);
+    for (int i = 0; i < l; ++i) {
+        target[p[i] - 'a']++;
+    }
+    for (int i = 0; i < l; ++i) {
+        now[s[i] - 'a']++;
+        if (now == target)ans.push_back(0);
+    }
+    for (int i = l; i < n; ++i) {
+        now[s[i - l] - 'a']--;
+        now[s[i] - 'a']++;
+        if (now == target)ans.push_back(i - l + 1);
+    }
+    return ans;
+}
+
 int main() {
     string s = " ";
     auto res = lengthOfLongestSubstring(s);

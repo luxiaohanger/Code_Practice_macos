@@ -199,11 +199,45 @@ int subarraySum(vector<int> &nums, int k) {
     }
 
     int ans = 0;
-    unordered_map<int,int> umap;
-    for (int i = 0;i<n;++i) {
+    unordered_map<int, int> umap;
+    for (int i = 0; i < n; ++i) {
         if (prefix[i] == k)ans++;
         if (umap.find(prefix[i] - k) != umap.end())ans += umap[prefix[i] - k];
         umap[prefix[i]]++;
     }
     return ans;
 }
+
+//3741
+int minimumDistance(vector<int> &nums) {
+    int n = nums.size();
+    unordered_map<int, pii> ump;
+    int ans = INT_MAX;
+    for (int i = 0; i < n; ++i) {
+        if (ump.contains(nums[i])) {
+            pii temp = ump[nums[i]];
+            if (temp.second != 0) {
+                ans = min(ans, (i - temp.first) * 2);
+                ump[nums[i]].first = ump[nums[i]].second;
+            }
+            ump[nums[i]].second = i;
+        } else {
+            ump[nums[i]] = {i, 0};
+        }
+    }
+    if (ans == INT_MAX)return -1;
+    return ans;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

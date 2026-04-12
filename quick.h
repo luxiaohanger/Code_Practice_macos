@@ -81,10 +81,39 @@ struct TreeNode {
     }
 };
 
+struct monotonic_queue {
+    deque<int> dq;
 
+    void push_val(int val) {
+        while (!dq.empty() && dq.back() < val) {
+            dq.pop_back();
+        }
+        dq.push_back(val);
+    }
 
+    void pop_val(int val) {
+        if (!dq.empty() && dq.front() == val)dq.pop_front();
+    }
 
+    void push_idx(int idx, const vector<int> &arr) {
+        while (!dq.empty() && arr[dq.back()] < arr[idx]) {
+            dq.pop_back();
+        }
+        dq.push_back(idx);
+    }
 
+    void pop_idx(int idx) {
+        if (!dq.empty() && dq.front() == idx) {
+            dq.pop_front();
+        }
+    }
+
+    int get_max() {
+        if (!dq.empty())
+            return dq.front();
+        return -1;
+    }
+};
 
 
 

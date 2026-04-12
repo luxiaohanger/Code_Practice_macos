@@ -186,6 +186,24 @@ vector<int> findAnagrams(string s, string p) {
     return ans;
 }
 
+//239
+//O(nlogn)use a heap to maintain the max_val of window and delete the element in a delay way
+//O(n)use monotonic queue
+vector<int> maxSlidingWindow(vector<int> &nums, int k) {
+    monotonic_queue mq;
+    vector<int> ans;
+    for (int i = 0; i < k; ++i) {
+        mq.push_idx(i, nums);
+    }
+    ans.push_back(nums[mq.get_max()]);
+    for (int i = 1; i <= nums.size() - k; ++i) {
+        mq.push_idx(i + k - 1, nums);
+        mq.pop_idx(i - 1);
+        ans.push_back(nums[mq.get_max()]);
+    }
+    return ans;
+}
+
 int main() {
     string s = " ";
     auto res = lengthOfLongestSubstring(s);

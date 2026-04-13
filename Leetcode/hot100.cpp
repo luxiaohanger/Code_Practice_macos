@@ -204,6 +204,43 @@ vector<int> maxSlidingWindow(vector<int> &nums, int k) {
     return ans;
 }
 
+//76
+//use double pointer(slide window) to keep min window
+//use set.empty() to check the coverage of t in O(1)
+string minWindow(string s, string t) {
+    unordered_map<char, int> check;
+    unordered_set<char> st;
+    for (char c: t) {
+        check[c]++;
+        st.insert(c);
+    }
+    unordered_map<char, int> now;
+    int l = 0;
+    int r = 0;
+    int minlen = INT_MAX;
+    int minl = 0, minr = 0;
+
+    for (; r < s.size(); ++r) {
+        now[s[r]]++;
+        if (now[s[r]] >= check[s[r]] && st.contains(s[r]))st.erase(s[r]);
+        if (!st.empty())continue;
+        while (st.empty()) {
+            if (r - l + 1 < minlen) {
+                minlen = r - l + 1;
+                minl = l;
+                minr = r;
+            }
+            now[s[l]]--;
+            if (now[s[l]] < check[s[l]])st.insert(s[l]);
+            l++;
+        }
+    }
+    if (minlen == INT_MAX)return "";
+    string ans;
+    for (int i = minl; i <= minr; ++i)ans += s[i];
+    return ans;
+}
+
 int main() {
     string s = " ";
     auto res = lengthOfLongestSubstring(s);

@@ -1,0 +1,49 @@
+### --- CMake 编译产物 --- ###
+# 忽略整个构建目录（这是最关键的一行）
+[build]/
+build*/
+out/
+bin/
+
+# 忽略 CMake 自动生成的中间文件
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+compile_commands.json
+
+### --- VS Code 个人配置 --- ###
+.vscode/
+*.code-workspace
+
+.cursor/
+
+### --- 操作系统/环境相关 --- ###
+# Mac 特有的隐藏文件
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 临时文件
+*.swp
+*~
+*.log
+*.tmp
+
+### --- 编译生成的二进制文件 --- ###
+# 忽略所有可执行文件（根据你的产物后缀调整）
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.exe
+*.out
+
+
+### --- 编译器/调试器产生的垃圾文件 --- ###
+*.dSYM/
+*.stackdump

@@ -13,10 +13,10 @@ vector<int> twoSum(vector<int>& nums, int target) {
 }
 
 // 49
-vector<vector<string> > groupAnagrams(vector<string>& strs) {
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
   int n = strs.size();
   vector<string> cp(strs.begin(), strs.end());
-  vector<vector<string> > ans;
+  vector<vector<string>> ans;
   for (int i = 0; i < n; ++i) {
     sort(cp[i].begin(), cp[i].end());
   }
@@ -90,9 +90,9 @@ int maxArea(vector<int>& height) {
 // 检索答案时确保每个位置的数和上一次不一样，保证唯一答案
 // a确定时，bc使用双指针寻找，根据nums[a]+nums[b]+nums[c]和0的大小关系，唯一确定指针移动方向
 // 只要步骤中设计修改下标，那么就一定要注意检查合理下标范围
-vector<vector<int> > threeSum(vector<int>& nums) {
+vector<vector<int>> threeSum(vector<int>& nums) {
   sort(nums.begin(), nums.end());
-  vector<vector<int> > ans;
+  vector<vector<int>> ans;
   int n = nums.size();
   for (int a = 0; a <= n - 3; ++a) {
     if (a != 0 && nums[a] == nums[a - 1]) continue;
@@ -239,6 +239,28 @@ string minWindow(string s, string t) {
   if (minlen == INT_MAX) return "";
   string ans;
   for (int i = minl; i <= minr; ++i) ans += s[i];
+  return ans;
+}
+
+// 56
+// sort first in intervals question
+struct cmp {
+  bool operator()(const vector<int>& a, const vector<int>& b) {
+    return a[0] < b[0];
+  }
+};
+
+vector<vector<int>> merge(vector<vector<int>>& intervals) {
+  sort(intervals.begin(), intervals.end(), cmp());
+  vector<vector<int>> ans;
+  ans.push_back(intervals[0]);
+  for (int i = 1; i < intervals.size(); ++i) {
+    if (intervals[i][0] <= ans.back()[1] && intervals[i][1] > ans.back()[1]) {
+      ans.back()[1] = intervals[i][1];
+    } else if (intervals[i][0] > ans.back()[1]) {
+      ans.push_back(intervals[i]);
+    }
+  }
   return ans;
 }
 

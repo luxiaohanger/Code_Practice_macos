@@ -257,3 +257,33 @@ int closestTarget(vector<string>& words, string target, int startIndex) {
   if (ans == INT_MAX) return -1;
   return ans;
 }
+
+// 3488
+// unfold the rotary array to simulate distance
+// use hashmap to memory the previous index
+
+vector<int> solveQueries(vector<int>& nums, vector<int>& queries) {
+  unordered_map<int, int> ump;
+  int n = nums.size();
+  vector<int> dis(n, INT_MAX);
+  for (int i = 0; i < n; ++i) {
+    nums.emplace_back(nums[i]);
+  }
+  for (int i = 0; i < 2 * n; ++i) {
+    if (ump.contains(nums[i]) && (i % n) != (ump[nums[i]] % n)) {
+      // this condition is important!
+      int d = i - ump[nums[i]];
+      dis[i % n] = min(dis[i % n], d);
+      dis[ump[nums[i]] % n] = min(dis[ump[nums[i]] % n], d);
+    }
+    ump[nums[i]] = i;
+  }
+
+  vector<int> ans(queries.size(), -1);
+  for (int i = 0; i < queries.size(); ++i) {
+    if (dis[queries[i]] != INT_MAX) {
+      ans[i] = dis[queries[i]];
+    }
+  }
+  return ans;
+}

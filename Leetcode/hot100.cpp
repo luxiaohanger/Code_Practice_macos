@@ -297,6 +297,18 @@ vector<int> productExceptSelf(vector<int>& nums) {
   return ans;
 }
 
+// 41
+int firstMissingPositive(vector<int>& nums) {
+  unordered_set<int> st;
+  for (int x : nums) {
+    st.insert(x);
+  }
+  for (int i = 1; i <= nums.size() + 1; ++i) {
+    if (!st.contains(i)) return i;
+  }
+  return 0;
+}
+
 int main() {
   string s = " ";
   auto res = lengthOfLongestSubstring(s);

@@ -287,3 +287,30 @@ vector<int> solveQueries(vector<int>& nums, vector<int>& queries) {
   }
   return ans;
 }
+
+// 3761
+int minMirrorPairDistance(vector<int>& nums) {
+  vector<int> re(nums.size());
+  for (int i = 0; i < nums.size(); ++i) {
+    string s = to_string(nums[i]);
+    reverse(s.begin(), s.end());
+    re[i] = stoi(s);
+  }
+  unordered_map<int, int> m2;
+  int res = INT_MAX;
+  for (int i = 0; i < nums.size(); ++i) {
+    if (m2.contains(nums[i])) {
+      res = min(res, abs(i - m2[nums[i]]));
+    }
+    m2[re[i]] = i;
+  }
+  if (res == INT_MAX) return -1;
+  return res;
+}
+
+int main() {
+  vector<int> test{12, 21, 45, 33, 54};
+  int out = minMirrorPairDistance(test);
+  cout << out << '\n';
+  return 0;
+}

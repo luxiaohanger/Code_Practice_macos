@@ -309,9 +309,74 @@ int firstMissingPositive(vector<int>& nums) {
   return 0;
 }
 
+// 73
+void setZeroes(vector<vector<int>>& matrix) {
+  unordered_set<int> s, t;
+  for (int i = 0; i < matrix.size(); ++i) {
+    for (int j = 0; j < matrix[0].size(); ++j) {
+      if (matrix[i][j] == 0) {
+        s.insert(i);
+        t.insert(j);
+      }
+    }
+  }
+
+  for (int i = 0; i < matrix.size(); ++i) {
+    for (int j = 0; j < matrix[0].size(); ++j) {
+      if (s.contains(i) || t.contains(j)) matrix[i][j] = 0;
+    }
+  }
+}
+
+// 54
+void compute_next(int nowx, int nowy, int& tempx, int& tempy, int dir) {
+  tempx = nowx;
+  tempy = nowy;
+  switch (dir) {
+    case 0:
+      tempy++;
+      break;
+    case 1:
+      tempx++;
+      break;
+    case 2:
+      tempy--;
+      break;
+    case 3:
+      tempx--;
+      break;
+  }
+}
+
+vector<int> spiralOrder(vector<vector<int>>& matrix) {
+  int row = matrix.size();
+  int col = matrix[0].size();
+  vector<int> ans;
+  vector<vector<bool>> m(row, vector<bool>(col, true));
+  int dir = 0;
+  int nowx = 0, nowy = 0;
+  int res = row * col;
+
+  while (res) {
+    res--;
+    ans.emplace_back(matrix[nowx][nowy]);
+    m[nowx][nowy] = false;
+    // compute next position
+    int tempx = nowx, tempy = nowy;
+    compute_next(nowx, nowy, tempx, tempy, dir);
+    if (!(tempx < row && tempx >= 0 && tempy < col && tempy >= 0 &&
+          m[tempx][tempy])) {
+      dir = (++dir) % 4;
+      compute_next(nowx, nowy, tempx, tempy, dir);
+    }
+    nowx = tempx;
+    nowy = tempy;
+  }
+  return ans;
+}
+
 int main() {
-  string s = " ";
-  auto res = lengthOfLongestSubstring(s);
-  printf("hello world\n");
+  vector<vector<int>> m{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  auto res = spiralOrder(m);
   return 0;
 }

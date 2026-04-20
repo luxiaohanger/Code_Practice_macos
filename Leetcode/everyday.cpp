@@ -308,9 +308,30 @@ int minMirrorPairDistance(vector<int>& nums) {
   return res;
 }
 
+// 2078
+int maxDistance(vector<int>& colors) {
+  int n = colors.size();
+  vector<pii> first_appear;
+  unordered_set<int> st;
+  int ans = 0;
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < first_appear.size(); ++j) {
+      if (colors[i] != first_appear[j].first) {
+        ans = max(ans, i - first_appear[j].second);
+        break;
+      }
+    }
+    if (!st.contains(colors[i])) {
+      st.insert(colors[i]);
+      first_appear.push_back({colors[i], i});
+    }
+  }
+  return ans;
+}
+
 int main() {
-  vector<int> test{12, 21, 45, 33, 54};
-  int out = minMirrorPairDistance(test);
+  vector<int> test{1, 8, 3, 8, 3};
+  int out = maxDistance(test);
   cout << out << '\n';
   return 0;
 }

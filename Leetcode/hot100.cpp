@@ -375,6 +375,28 @@ vector<int> spiralOrder(vector<vector<int>>& matrix) {
   return ans;
 }
 
+// 48
+void rotate(vector<vector<int>>& matrix) {
+  int n = matrix.size();
+  for (int i = 0; i < n / 2; ++i) {
+    // martrix[i][i]
+    for (int j = 0; j < n - i * 2 - 1; ++j) {
+      // martrix[i][i + j]
+      int x = i, y = i + j;
+      int temp = matrix[x][y];
+      int times = 4;
+      while (times--) {
+        int newx = y, newy = n - x - 1;
+        int t = matrix[newx][newy];
+        matrix[newx][newy] = temp;
+        temp = t;
+        x = newx;
+        y = newy;
+      }
+    }
+  }
+}
+
 int main() {
   vector<vector<int>> m{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
   auto res = spiralOrder(m);

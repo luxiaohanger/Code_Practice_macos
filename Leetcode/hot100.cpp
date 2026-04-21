@@ -397,6 +397,49 @@ void rotate(vector<vector<int>>& matrix) {
   }
 }
 
+// 240
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+  int n = matrix.size(), m = matrix[0].size();
+  int x = 0, y = m - 1;
+  while (x >= 0 && x < n && y >= 0 && y < m) {
+    if (target > matrix[x][y])
+      ++x;
+    else if (target < matrix[x][y])
+      --y;
+    else
+      return true;
+  }
+  return false;
+}
+
+// 160
+// 通过长度差对齐起点，利用双指针同步遍历寻找交点。
+ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
+  int n1 = 0, n2 = 0;
+  auto temp = headA;
+  while (temp) {
+    n1++;
+    temp = temp->next;
+  }
+  temp = headB;
+  while (temp) {
+    n2++;
+    temp = temp->next;
+  }
+  auto pa = headA;
+  auto pb = headB;
+  ListNode*& c = n1 > n2 ? pa : pb;
+  int step = abs(n1 - n2);
+  while (step--) {
+    c = c->next;
+  }
+  while (pa != pb) {
+    pa = pa->next;
+    pb = pb->next;
+  }
+  return pa;
+}
+
 int main() {
   vector<vector<int>> m{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
   auto res = spiralOrder(m);

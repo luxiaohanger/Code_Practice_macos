@@ -81,6 +81,30 @@ struct ListNode {
   ListNode(int x) : val(x), next(NULL) {}
 };
 
+ListNode* vectorToList(vector<int> v) {
+  ListNode* pre;
+  ListNode* head;
+  for (int i = 0; i < v.size(); ++i) {
+    ListNode* node = new ListNode(v[i]);
+    if (i == 0) {
+      pre = node;
+      head = node;
+    } else
+      pre->next = node;
+    pre = node;
+  }
+  return head;
+}
+
+void deleteList(ListNode* head) {
+  ListNode* t = head;
+  while (t) {
+    ListNode* next = t->next;
+    delete t;
+    t = next;
+  }
+}
+
 struct monotonic_queue {
   deque<int> dq;
 

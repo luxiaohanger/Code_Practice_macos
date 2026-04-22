@@ -440,8 +440,79 @@ ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
   return pa;
 }
 
+// 206
+// 用三个指针分别指向pre now next
+// space O(1)
+ListNode* reverseList(ListNode* head) {
+  if (!head) return nullptr;
+  ListNode* pre = head;
+  ListNode* now = head->next;
+  head->next = nullptr;
+  while (now) {
+    ListNode* next = now->next;
+    now->next = pre;
+    pre = now;
+    now = next;
+  }
+  return pre;
+}
+
+// 234
+// 原地空间翻转链表
+bool isPalindrome(ListNode* head) {
+  if (!head) return true;
+  int n = 0;
+  ListNode* t = head;
+  while (t) {
+    ++n;
+    t = t->next;
+  }
+  if (n == 1) return true;
+  ListNode* a;
+  ListNode* b;
+  int sa, sb;
+  if (n % 2 == 1) {
+    sa = n / 2 - 1;
+    sb = n / 2 + 1;
+  } else {
+    sa = n / 2 - 1;
+    sb = n / 2;
+  }
+  t = head;
+  int st = 0;
+  while (true) {
+    if (st == sa) a = t;
+    if (st == sb) {
+      b = t;
+      break;
+    }
+    t = t->next;
+    st++;
+  }
+  a->next = nullptr;
+  // reverse a
+  ListNode* pre = head;
+  ListNode* now = head->next;
+  head->next = nullptr;
+  while (now) {
+    ListNode* next = now->next;
+    now->next = pre;
+    pre = now;
+    now = next;
+  }
+  while (a && b) {
+    if (a->val != b->val) {
+      return false;
+    }
+    a = a->next;
+    b = b->next;
+  }
+  return true;
+}
+
 int main() {
-  vector<vector<int>> m{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-  auto res = spiralOrder(m);
+  ListNode* head = vectorToList({1, 2, 3, 4, 5});
+  auto ans = reverseList(head);
+  deleteList(head);
   return 0;
 }

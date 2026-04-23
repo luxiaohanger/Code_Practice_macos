@@ -510,6 +510,71 @@ bool isPalindrome(ListNode* head) {
   return true;
 }
 
+// 141
+// 快慢指针判环
+bool hasCycle(ListNode* head) {
+  if (!head) return false;
+  ListNode* quick = head;
+  ListNode* slow = head;
+  while (slow && quick && quick->next) {
+    slow = slow->next;
+    quick = quick->next->next;
+    if (slow == quick) return true;
+  }
+  return false;
+}
+
+// 142
+ListNode* detectCycle(ListNode* head) {
+  if (!head || !head->next) return nullptr;
+  ListNode* quick = head;
+  ListNode* slow = head;
+  while (slow && quick && quick->next) {
+    slow = slow->next;
+    quick = quick->next->next;
+    if (slow == quick) break;
+  }
+  if (slow != quick) return nullptr;
+  slow = head;
+  while (slow != quick) {
+    slow = slow->next;
+    quick = quick->next;
+  }
+  return slow;
+}
+
+// 21
+ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+  if (!list1) return list2;
+  if (!list2) return list1;
+  ListNode* head;
+  ListNode* now;
+  if (list1->val > list2->val) {
+    now = list2;
+    list2 = list2->next;
+  } else {
+    now = list1;
+    list1 = list1->next;
+  }
+  head = now;
+  while (list1 && list2) {
+    if (list1->val > list2->val) {
+      now->next = list2;
+      now = list2;
+      list2 = list2->next;
+    } else {
+      now->next = list1;
+      now = list1;
+      list1 = list1->next;
+    }
+  }
+  if (list1)
+    now->next = list1;
+  else
+    now->next = list2;
+  return head;
+}
+
 int main() {
   ListNode* head = vectorToList({1, 2, 3, 4, 5});
   auto ans = reverseList(head);

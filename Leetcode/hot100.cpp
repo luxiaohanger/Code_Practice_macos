@@ -575,6 +575,99 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
   return head;
 }
 
+// 2
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+  int carry = 0;
+  ListNode* a = l1;
+  ListNode* b = l2;
+  ListNode* protect = new ListNode(0);
+  ListNode* prev = protect;
+  while (a || b) {
+    ListNode* newnode = new ListNode(0);
+
+    int temp = carry;
+    if (a) {
+      temp += a->val;
+      a = a->next;
+    }
+    if (b) {
+      temp += b->val;
+      b = b->next;
+    }
+
+    if (temp >= 10) {
+      temp %= 10;
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+
+    newnode->val = temp;
+    prev->next = newnode;
+    prev = newnode;
+  }
+  if (carry != 0) {
+    ListNode* newnode = new ListNode(1);
+    prev->next = newnode;
+  }
+  return protect->next;
+}
+
+// 19
+ListNode* removeNthFromEnd(ListNode* head, int n) {
+  ListNode* protect = new ListNode(0);
+  protect->next = head;
+  // check len
+  ListNode* t = head;
+  int num = 0;
+  while (t) {
+    num++;
+    t = t->next;
+  }
+  int step = num - n;
+  ListNode* prev = protect;
+  ListNode* now = head;
+  while (step--) {
+    prev = prev->next;
+    now = now->next;
+  }
+  prev->next = now->next;
+  return protect->next;
+}
+
+// 24
+void swap_node(ListNode* prev, ListNode* first, ListNode* second,
+               ListNode* after) {
+  prev->next = second;
+  second->next = first;
+  first->next = after;
+}
+ListNode* swapPairs(ListNode* head) {
+  if (!head || !head->next) return head;
+  ListNode* protect = new ListNode(0);
+  protect->next = head;
+  ListNode* prev = protect;
+  ListNode* first = head;
+  ListNode* second = head->next;
+  ListNode* after = head->next->next;
+  while (first && second) {
+    swap_node(prev, first, second, after);
+    prev = prev->next->next;
+    first = prev->next;
+    if (first)
+      second = first->next;
+    else
+      second = nullptr;
+    if (second)
+      after = second->next;
+    else
+      after = nullptr;
+  }
+  auto ans = protect->next;
+  delete protect;
+  return ans;
+}
+
 int main() {
   ListNode* head = vectorToList({1, 2, 3, 4, 5});
   auto ans = reverseList(head);

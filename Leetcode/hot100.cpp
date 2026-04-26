@@ -668,6 +668,183 @@ ListNode* swapPairs(ListNode* head) {
   return ans;
 }
 
+// 25
+// 编写翻转函数，使用本组节点的保护节点和尾节点为参数
+// 分组使用翻转函数，原地修改链表
+ListNode* my_reverse(ListNode* prev, ListNode* last) {
+  ListNode* end = last->next;
+  last->next = nullptr;
+  ListNode* begin = prev->next;
+  ListNode* first = prev;
+  ListNode* second = begin;
+  while (first && second) {
+    ListNode* temp = second->next;
+    second->next = first;
+    first = second;
+    second = temp;
+  }
+  prev->next = last;
+  begin->next = end;
+  return begin;
+}
+
+ListNode* reverseKGroup(ListNode* head, int k) {
+  int n = 0;
+  ListNode* t = head;
+  while (t) {
+    n++;
+    t = t->next;
+  }
+  if (n < k) return head;
+  int groups = n / k;
+  ListNode* safe = new ListNode(0);
+  safe->next = head;
+  ListNode* prev = safe;
+  while (groups--) {
+    ListNode* last = prev;
+    int step = k;
+    while (step--) {
+      last = last->next;
+    }
+    prev = my_reverse(prev, last);
+  }
+
+  auto ans = safe->next;
+  delete safe;
+  return ans;
+}
+
+// 138
+// 任意类型的原始指针都以整数形式存储（因为是地址），可以直接hash
+Node* copyRandomList(Node* head) {
+  unordered_map<Node*, Node*> ump;
+  int n = 0;
+  Node* t = head;
+  Node* prev = new Node(0);
+  prev->next = head;
+  Node* copy_prev = new Node(0);
+  ump[prev] = copy_prev;
+  while (t) {
+    n++;
+    Node* node = new Node(t->val);
+    ump[t] = node;
+    ump[prev]->next = node;
+    t = t->next;
+    prev = prev->next;
+  }
+  t = head;
+  while (t) {
+    if (t->random) {
+      ump[t]->random = ump[t->random];
+    }
+    t = t->next;
+  }
+  return ump[head];
+}
+
+// 148
+// merge sort
+ListNode* sortList(ListNode* head) {
+  if (!head) return head;
+  // check len
+  int n = 0;
+  ListNode* t = head;
+  while (t) {
+    n++;
+    t = t->next;
+  }
+  if (n == 1) return head;
+  int len1 = n / 2;
+  ListNode* l1 = head;
+  ListNode* l2 = head;
+  while (len1--) l2 = l2->next;
+  t = head;
+  while (t->next != l2) t = t->next;
+  t->next = nullptr;
+  l1 = sortList(l1);
+  l2 = sortList(l2);
+  return mergeTwoLists(l1, l2);
+}
+
+// 23
+// 直接顺序的合并所有链表会导致先被合并的链表在接下来每次合并都被遍历
+// 总遍历次数达到 k^2, 时间O(k^2 * n)
+// 采用分治思想分组处理，每次都两两一组合并
+// 遍历次数 klogk 时间O(nklogk)
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+  if (lists.empty()) return nullptr;
+  int step = 1;
+  while (step <= lists.size()) {
+    step *= 2;
+    for (int i = 0; i < lists.size(); i += step) {
+      if (i + step / 2 < lists.size())
+        lists[i] = mergeTwoLists(lists[i], lists[i + step / 2]);
+    }
+  }
+  return lists[0];
+}
+
+// 146
+class LRUCache {
+ private:
+  int capacity;
+  int num;
+  double_list* safe;
+  unordered_map<int, double_list*> map;
+
+  void move_node(double_list* now) {
+    // move now to head
+    now->prev->next = now->next;
+    now->next->prev = now->prev;
+    now->next = safe->next;
+    now->prev = safe;
+    safe->next->prev = now;
+    safe->next = now;
+  }
+
+ public:
+  LRUCache(int capacity) {
+    safe = new double_list(0, 0);
+    safe->next = safe;
+    safe->prev = safe;
+    this->capacity = capacity;
+    this->num = 0;
+  }
+
+  int get(int key) {
+    int res = -1;
+    if (map.contains(key)) {
+      res = map[key]->val;
+      move_node(map[key]);
+    }
+    return res;
+  }
+
+  void put(int key, int value) {
+    if (map.contains(key)) {
+      map[key]->val = value;
+      move_node(map[key]);
+    } else {
+      if (num < capacity) {
+        num++;
+        double_list* node = new double_list(value, key);
+        map[key] = node;
+        node->prev = safe;
+        node->next = safe->next;
+        safe->next->prev = node;
+        safe->next = node;
+      } else {
+        double_list* last = safe->prev;
+        map.erase(last->key);
+        last->key = key;
+        last->val = value;
+        map[key] = last;
+        move_node(map[key]);
+      }
+    }
+  }
+};
+
 int main() {
   ListNode* head = vectorToList({1, 2, 3, 4, 5});
   auto ans = reverseList(head);

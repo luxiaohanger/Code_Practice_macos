@@ -81,6 +81,27 @@ struct ListNode {
   ListNode(int x) : val(x), next(NULL) {}
 };
 
+class Node {
+ public:
+  int val;
+  Node* next;
+  Node* random;
+
+  Node(int _val) {
+    val = _val;
+    next = NULL;
+    random = NULL;
+  }
+};
+
+struct double_list {
+  int val;
+  int key;
+  double_list* prev;
+  double_list* next;
+  double_list(int x, int k) : val(x), key(k), prev(nullptr), next(nullptr) {}
+};
+
 ListNode* vectorToList(vector<int> v) {
   ListNode* pre;
   ListNode* head;

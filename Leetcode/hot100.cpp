@@ -935,6 +935,65 @@ int diameterOfBinaryTree(TreeNode* root) {
     return ans;
 }
 
+// 102
+vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> ans;
+    if (!root) return ans;
+    vector<int> temp;
+    queue<pair<TreeNode*, int>> q;
+    q.push({root, 0});
+    int level = 0;
+    while (!q.empty()) {
+        TreeNode* t = q.front().first;
+        int n = q.front().second;
+        q.pop();
+        if (n == level) {
+            temp.push_back(t->val);
+        } else {
+            level = n;
+            ans.push_back(temp);
+            temp.clear();
+            temp.push_back(t->val);
+        }
+        if (t->left) {
+            q.push({t->left, n + 1});
+        }
+        if (t->right) {
+            q.push({t->right, n + 1});
+        }
+    }
+    if (!temp.empty()) ans.push_back(temp);
+    return ans;
+}
+
+// 108
+TreeNode* reconstruct_108(const vector<int>& nums, int l, int r) {
+    if (l == r) return new TreeNode(nums[l]);
+    if (l > r) return nullptr;
+    int mid = (l + r) / 2;
+    //(l , mid - 1) ; mid ; (mid + 1 , r)
+    TreeNode* root = new TreeNode(nums[mid]);
+    TreeNode* left = reconstruct_108(nums, l, mid - 1);
+    TreeNode* right = reconstruct_108(nums, mid + 1, r);
+    root->left = left;
+    root->right = right;
+    return root;
+}
+
+TreeNode* sortedArrayToBST(vector<int>& nums) {
+    if (nums.empty()) return nullptr;
+    return reconstruct_108(nums, 0, nums.size() - 1);
+}
+
+// 98
+bool isValidBST(TreeNode* root) {
+    vector<int> inorder = inorderTraversal(root);
+    for (int i = 1; i < inorder.size(); ++i) {
+        if (inorder[i - 1] >= inorder[i]) return false;
+    }
+    return true;
+}
+
 int main() {
     ListNode* head = vectorToList({1, 2, 3, 4, 5});
     auto ans = reverseList(head);

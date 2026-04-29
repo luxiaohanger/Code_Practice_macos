@@ -994,6 +994,99 @@ bool isValidBST(TreeNode* root) {
     return true;
 }
 
+// 230
+int kthSmallest(TreeNode* root, int k) {
+    vector<int> v = inorderTraversal(root);
+    return v[k - 1];
+}
+
+// 199
+// use level_order to get message about level
+vector<int> rightSideView(TreeNode* root) {
+    vector<int> ans;
+    if (!root) return ans;
+    queue<TreeNode*> q;
+    q.push(root);
+    int n = 1;
+    while (!q.empty()) {
+        int next_n = 0;
+        TreeNode* t;
+        while (n--) {
+            t = q.front();
+            q.pop();
+            if (t->left) {
+                next_n++;
+                q.push(t->left);
+            }
+            if (t->right) {
+                next_n++;
+                q.push(t->right);
+            }
+        }
+        n = next_n;
+        ans.push_back(t->val);
+    }
+    return ans;
+}
+
+// 114
+void reconstruct_114(TreeNode* root, TreeNode*& tail) {
+    if (!root) return;
+    TreeNode* left = root->left;
+    TreeNode* right = root->right;
+    tail->right = root;
+    tail = root;
+    tail->left = nullptr;
+    tail->right = nullptr;
+    reconstruct_114(left, tail);
+    reconstruct_114(right, tail);
+}
+
+void flatten(TreeNode* root) {
+    TreeNode* tail = new TreeNode(0);
+    reconstruct_114(root, tail);
+    // delete tail;
+}
+
+// 105
+TreeNode* reconstruct_105(vector<int>& preorder, vector<int>& inorder, int prel,
+                          int prer, int inl, int inr,
+                          unordered_map<int, int>& umap) {
+    if (prel > prer) return nullptr;
+    TreeNode* root = new TreeNode(preorder[prel]);
+    if (prel == prer) return root;
+    // preorder : root,lefttree,righttree
+    // inorder : lefttree,root,righttree
+    int left_prel, left_prer, right_prel, right_prer, left_inl, left_inr,
+        right_inl, right_inr;
+
+    int i = umap[preorder[prel]];
+    left_inl = inl;
+    left_inr = i - 1;
+    right_inl = i + 1;
+    right_inr = inr;
+
+    int n_left = left_inr - left_inl + 1;
+    left_prel = prel + 1;
+    left_prer = left_prel + n_left - 1;
+    right_prel = left_prer + 1;
+    right_prer = prer;
+    root->left = reconstruct_105(preorder, inorder, left_prel, left_prer,
+                                 left_inl, left_inr, umap);
+    root->right = reconstruct_105(preorder, inorder, right_prel, right_prer,
+                                  right_inl, right_inr, umap);
+    return root;
+}
+
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    int r = preorder.size() - 1;
+    unordered_map<int, int> map;
+    for (int i = 0; i <= r; ++i) {
+        map[inorder[i]] = i;
+    }
+    return reconstruct_105(preorder, inorder, 0, r, 0, r, map);
+}
+
 int main() {
     ListNode* head = vectorToList({1, 2, 3, 4, 5});
     auto ans = reverseList(head);

@@ -1962,6 +1962,45 @@ vector<int> dailyTemperatures(vector<int>& temperatures) {
     return ans;
 }
 
+// 84
+// 单调栈统计两侧第一个比自己低的柱子，结合起来得到最大面积
+int largestRectangleArea(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> left(n, -1);
+    vector<int> right(n, n);
+    stack<pii> st;
+    for (int i = 0; i < n; ++i) {
+        while (!st.empty() && heights[i] < st.top().first) {
+            right[st.top().second] = i;
+            st.pop();
+        }
+        st.push({heights[i], i});
+    }
+
+    while (!st.empty()) st.pop();
+
+    for (int i = n - 1; i >= 0; --i) {
+        while (!st.empty() && heights[i] < st.top().first) {
+            left[st.top().second] = i;
+            st.pop();
+        }
+        st.push({heights[i], i});
+    }
+
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {
+        ans = max(ans, heights[i] * (right[i] - left[i] - 1));
+    }
+    return ans;
+}
+
+// 215
+int findKthLargest(vector<int>& nums, int k) {
+    int idx = nums.size() - k;
+    nth_element(nums.begin(), nums.begin() + idx, nums.end());
+    return nums[idx];
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

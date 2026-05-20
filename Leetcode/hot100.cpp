@@ -2001,6 +2001,89 @@ int findKthLargest(vector<int>& nums, int k) {
     return nums[idx];
 }
 
+// 347
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> ump;
+    for (auto x : nums) {
+        ump[x]++;
+    }
+    vector<pii> v;
+    for (auto x : ump) {
+        v.push_back(x);
+    }
+
+    nth_element(v.begin(), v.begin() + k, v.end(),
+                [](pii a, pii b) { return a.second > b.second; });
+    vector<int> ans;
+    for (int i = 0; i < k; ++i) ans.push_back(v[i].first);
+    return ans;
+}
+
+// 295
+class MedianFinder {
+   private:
+    priority_queue<int, vector<int>,
+                   decltype([](int a, int b) { return a < b; })>
+        maxheap;
+
+    priority_queue<int, vector<int>,
+                   decltype([](int a, int b) { return a > b; })>
+        minheap;
+
+   public:
+    MedianFinder() {}
+
+    void addNum(int num) {
+        // keep n1 >= n2
+        int n1 = minheap.size();
+        int n2 = maxheap.size();
+        if (n1 == 0) {
+            minheap.push(num);
+            return;
+        }
+        if (n2 == 0) {
+            if (num > minheap.top()) {
+                minheap.push(num);
+                int x = minheap.top();
+                minheap.pop();
+                maxheap.push(x);
+            } else
+                maxheap.push(num);
+            return;
+        }
+        if (num >= minheap.top()) {
+            if (n1 == n2)
+                minheap.push(num);
+            else {
+                // n1 == n2 + 1
+                minheap.push(num);
+                int x = minheap.top();
+                minheap.pop();
+                maxheap.push(x);
+            }
+        } else {
+            if (n1 == n2) {
+                maxheap.push(num);
+                int x = maxheap.top();
+                maxheap.pop();
+                minheap.push(x);
+            } else {
+                maxheap.push(num);
+            }
+        }
+    }
+
+    double findMedian() {
+        int n1 = minheap.size();
+        int n2 = maxheap.size();
+        if (n2 == 0) return minheap.top();
+        if (n1 == n2)
+            return (minheap.top() + maxheap.top()) / 2.0;
+        else
+            return minheap.top();
+    }
+};
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

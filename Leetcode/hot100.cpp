@@ -2084,6 +2084,28 @@ class MedianFinder {
     }
 };
 
+// 121
+int maxProfit(vector<int>& prices) {
+    int min = INT_MAX;
+    int ans = 0;
+    for (int i = 0; i < prices.size(); ++i) {
+        ans = max(prices[i] - min, ans);
+        min = ::min(min, prices[i]);
+    }
+    return ans;
+}
+
+// 55
+bool canJump(vector<int>& nums) {
+    int n = nums.size();
+    int far = 0;
+    for (int i = 0; i < n; ++i) {
+        if (far < i) return false;
+        far = max(far, i + nums[i]);
+    }
+    return true;
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

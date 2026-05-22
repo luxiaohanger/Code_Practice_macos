@@ -2106,6 +2106,53 @@ bool canJump(vector<int>& nums) {
     return true;
 }
 
+// 45
+int jump(vector<int>& nums) {
+    int idx = 0;
+    int step = 0;
+    if (nums.size() == 1) return 0;
+    while (idx < nums.size()) {
+        int far = 0;
+        int next = 0;
+        for (int i = 1; i <= nums[idx]; ++i) {
+            if (idx + i >= nums.size() - 1) {
+                next = nums.size();
+                break;
+            }
+            if (far < idx + i + nums[idx + i]) {
+                next = i + idx;
+                far = idx + i + nums[idx + i];
+            }
+        }
+        step++;
+        idx = next;
+    }
+    return step;
+}
+
+// 763
+vector<int> partitionLabels(string s) {
+    // 记录每个字母最后出现的位置
+    vector<int> v(26);
+    for (int i = 0; i < s.size(); ++i) {
+        v[s[i] - 'a'] = i;
+    }
+    int l = 0;
+    int r = 0;
+    vector<int> ans;
+    while (l < s.size()) {
+        int now = l;
+        while (now <= r) {
+            r = ::max(r, v[s[now] - 'a']);
+            ++now;
+        }
+        ans.push_back(r - l + 1);
+        l = now;
+        r = now;
+    }
+    return ans;
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

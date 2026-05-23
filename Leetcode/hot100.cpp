@@ -2153,6 +2153,45 @@ vector<int> partitionLabels(string s) {
     return ans;
 }
 
+// 70
+int climbStairs(int n) {
+    vector<int> dp(n + 10);
+    dp[1] = 1;
+    dp[2] = 2;
+    for (int i = 3; i <= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+
+// 118
+vector<vector<int>> generate(int numRows) {
+    vector<vector<int>> ans;
+    for (int i = 1; i <= numRows; ++i) {
+        vector<int> temp(i);
+        temp[0] = 1;
+        temp[i - 1] = 1;
+        for (int j = 1; j < i - 1; ++j) {
+            temp[j] = (ans.back())[j - 1] + (ans.back())[j];
+        }
+        ans.push_back(temp);
+    }
+    return ans;
+}
+
+// 198
+int rob(vector<int>& nums) {
+    int n = nums.size();
+    vector<vector<int>> dp(n, vector<int>(2));
+    dp[0][0] = 0;
+    dp[0][1] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        dp[i][0] = max(dp[i - 1][0], dp[i - 1][1]);
+        dp[i][1] = dp[i - 1][0] + nums[i];
+    }
+    return max(dp[n - 1][0], dp[n - 1][1]);
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

@@ -2192,6 +2192,47 @@ int rob(vector<int>& nums) {
     return max(dp[n - 1][0], dp[n - 1][1]);
 }
 
+// 279
+// 同322 ，硬币金额为完全平方数
+int numSquares(int n) {
+    vector<int> dp(n + 5, INT_MAX);
+
+    for (int i = 0; i * i <= n; ++i) {
+        dp[i * i] = 1;
+    }
+
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j * j <= i; ++j) {
+            dp[i] = min(dp[i], dp[i - j * j] + 1);
+        }
+    }
+
+    return dp[n];
+}
+
+// 322
+// O(n) 时间内无法解决的问题
+// 对于每个面额，需要遍历所有前置路径
+int coinChange(vector<int>& coins, int amount) {
+    vector<int> dp(amount + 5, INT_MAX);
+    dp[0] = 0;
+    for (auto x : coins) {
+        if (x <= amount)
+            dp[x] = 1;
+        else
+            break;
+    }
+
+    for (int i = 1; i <= amount; ++i) {
+        for (auto x : coins) {
+            if (i - x >= 0 && dp[i - x] != INT_MAX)
+                dp[i] = min(dp[i], dp[i - x] + 1);
+        }
+    }
+    if (dp[amount] == INT_MAX) return -1;
+    return dp[amount];
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

@@ -2233,6 +2233,69 @@ int coinChange(vector<int>& coins, int amount) {
     return dp[amount];
 }
 
+// 139
+// 依旧和硬币兑换思路一致
+// 比较子串是否一样时使用哈希表
+bool wordBreak(string s, vector<string>& wordDict) {
+    int n = s.size();
+    vector<bool> dp(n);
+    unordered_set<string> sst;
+
+    for (auto x : wordDict) sst.insert(x);
+
+    for (int i = 0; i < n; ++i) {
+        for (auto ss : wordDict) {
+            if (dp[i]) break;
+            int l = ss.size();
+            if (i == l - 1) {
+                string subs = s.substr(0, l);
+                dp[i] = sst.contains(subs);
+            }
+            if (i >= l && dp[i - l]) {
+                string subs = s.substr(i - l + 1, l);
+                dp[i] = sst.contains(subs);
+            }
+        }
+    }
+    return dp[n - 1];
+}
+
+// 300
+// 贪心 + 二分
+// 我们希望数组增长的越慢越好
+// 因此当候选元素没法增加长度时，就让候选元素更新已有短序列的尾元素
+// 定义 dp[i] ： 长度为 i 的递增子序列的尾元素
+// nums[i] <= dp[len] : 二分查找第一个小于 nums[i] 的 dp[k]
+// 更新 dp[k + 1] = nums[i]
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    int len = 1;
+    vector<int> dp(n + 5);
+    dp[len] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        if (nums[i] > dp[len])
+            dp[++len] = nums[i];
+        else {
+            int l = 1;
+            int r = len;
+            int pos = 0;
+            while (l <= r) {
+                int mid = (l + r) / 2;
+                if (nums[i] > dp[mid]) {
+                    // 由于答案已经记录下来了
+                    // 所以此处无需保证答案在 [l,r]
+                    // 而是保证区间收敛
+                    l = mid + 1;
+                    pos = mid;
+                } else
+                    r = mid - 1;
+            }
+            dp[pos + 1] = nums[i];
+        }
+    }
+    return len;
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

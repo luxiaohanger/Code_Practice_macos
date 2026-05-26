@@ -2296,6 +2296,22 @@ int lengthOfLIS(vector<int>& nums) {
     return len;
 }
 
+// 152
+int maxProduct(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> mx(n);
+    vector<int> mi(n);
+    int ans = INT_MIN;
+    mx[0] = nums[0];
+    mi[0] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        mx[i] = max(max(nums[i], mx[i - 1] * nums[i]), mi[i - 1] * nums[i]);
+        mi[i] = min(min(nums[i], mx[i - 1] * nums[i]), mi[i - 1] * nums[i]);
+        ans = max(ans, mx[i]);
+    }
+    return ans;
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

@@ -2312,6 +2312,21 @@ int maxProduct(vector<int>& nums) {
     return ans;
 }
 
+// 416
+bool canPartition(vector<int>& nums) {
+    int sum = 0;
+    for (auto x : nums) sum += x;
+    if (sum % 2 != 0) return false;
+    int target = sum / 2;
+    vector<int> dp(target + 1);
+    for (auto x : nums) {
+        for (int i = target; i >= x; --i) {
+            dp[i] = max(dp[i], dp[i - x] + x);
+        }
+    }
+    return dp[target] == target;
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

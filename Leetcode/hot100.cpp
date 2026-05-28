@@ -2327,6 +2327,51 @@ bool canPartition(vector<int>& nums) {
     return dp[target] == target;
 }
 
+// 32
+// 定义 dp[i] : 以 i 结尾的最大合法子串长度
+// 只有 s[i] == '(' 才可能合法
+// 根据 i - 1 分类讨论：
+// s[i - 1] == '(' : dp[i] = dp[i - 2] + 2;
+// s[i - 1] == ')' : dp[i] = dp[i - dp[i - 1] - 2] + dp[i - 1] + 2;
+// 注意讨论下标范围
+int longestValidParentheses(string s) {
+    int ans = 0;
+    int n = s.size();
+    vector<int> dp(n);
+    for (int i = 1; i < n; ++i) {
+        if (s[i] == ')') {
+            if (s[i - 1] == '(') {
+                if (i > 1)
+                    dp[i] = dp[i - 2] + 2;
+                else
+                    dp[i] = 2;
+            } else {
+                if (i - dp[i - 1] - 1 >= 0 && s[i - dp[i - 1] - 1] == '(') {
+                    if (i - dp[i - 1] - 2 >= 0)
+                        dp[i] = dp[i - dp[i - 1] - 2] + 2 + dp[i - 1];
+                    else
+                        dp[i] = dp[i - 1] + 2;
+                }
+            }
+        }
+        ans = max(dp[i], ans);
+    }
+    return ans;
+}
+
+// 62
+int uniquePaths(int m, int n) {
+    vector<vector<int>> dp(n, vector<int>(m));
+    for (int i = 0; i < n; ++i) dp[i][0] = 1;
+    for (int j = 0; j < m; ++j) dp[0][j] = 1;
+    for (int i = 1; i < n; ++i) {
+        for (int j = 1; j < m; ++j) {
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+    }
+    return dp[n - 1][m - 1];
+}
+
 int main() {
     vector<int> nums{4, 5, 6, 7, 0, 1, 2};
     auto ans = search(nums, 3);

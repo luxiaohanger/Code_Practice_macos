@@ -2372,9 +2372,117 @@ int uniquePaths(int m, int n) {
     return dp[n - 1][m - 1];
 }
 
-int main() {
-    vector<int> nums{4, 5, 6, 7, 0, 1, 2};
-    auto ans = search(nums, 3);
-    cout << ans;
-    return 0;
+// 64
+int minPathSum(vector<vector<int>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<int>> dp(n, vector<int>(m));
+    dp[0][0] = grid[0][0];
+    for (int i = 1; i < n; ++i) dp[i][0] = dp[i - 1][0] + grid[i][0];
+    for (int j = 1; j < m; ++j) dp[0][j] = dp[0][j - 1] + grid[0][j];
+    for (int i = 1; i < n; ++i) {
+        for (int j = 1; j < m; ++j) {
+            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+        }
+    }
+    return dp[n - 1][m - 1];
 }
+
+// 5
+string longestPalindrome(string s) {
+    int n = s.size();
+    vector<vector<bool>> dp(n, vector<bool>(n));
+    for (int i = 0; i < n; ++i) dp[i][i] = true;
+    int ans = 1;
+    int idx = 0;
+    for (int len = 2; len <= n; ++len) {
+        for (int i = 0; i + len - 1 < n; ++i) {
+            if (len == 2) {
+                if (s[i] == s[i + 1]) {
+                    dp[i][i + 1] = true;
+                    ans = len;
+                    idx = i;
+                }
+            } else if (s[i] == s[i + len - 1] && dp[i + 1][i + len - 2]) {
+                dp[i][i + len - 1] = true;
+                ans = len;
+                idx = i;
+            }
+        }
+    }
+    return s.substr(idx, ans);
+}
+
+// 1143
+int longestCommonSubsequence(string text1, string text2) {
+    int n1 = text1.size();
+    int n2 = text2.size();
+    vector<vector<int>> dp(n1, vector<int>(n2));
+
+    for (int i = 0; i < n1; ++i) {
+        if (text1[i] == text2[0]) {
+            for (int k = i; k < n1; ++k) dp[k][0] = 1;
+            break;
+        }
+    }
+
+    for (int j = 0; j < n2; ++j) {
+        if (text2[j] == text1[0]) {
+            for (int k = j; k < n2; ++k) dp[0][k] = 1;
+            break;
+        }
+    }
+
+    for (int i = 1; i < n1; ++i) {
+        for (int j = 1; j < n2; ++j) {
+            if (text1[i] == text2[j])
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            else
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    return dp[n1 - 1][n2 - 1];
+}
+
+// 72
+int minDistance(string word1, string word2) {
+    int n1 = word1.size();
+    int n2 = word2.size();
+
+    if (n1 == 0)
+        return n2;
+    else if (n2 == 0)
+        return n1;
+
+    vector<vector<int>> dp(n1, vector<int>(n2));
+
+    //
+    for (int i = 0; i < n1; ++i) {
+        if (word1[i] == word2[0]) {
+            for (int j = i; j < n1; ++j) dp[j][0] = j;
+            break;
+        } else
+            dp[i][0] = i + 1;
+    }
+
+    for (int i = 0; i < n2; ++i) {
+        if (word1[0] == word2[i]) {
+            for (int j = i; j < n2; ++j) dp[0][j] = j;
+            break;
+        } else
+            dp[0][i] = i + 1;
+    }
+
+    for (int i = 1; i < n1; ++i) {
+        for (int j = 1; j < n2; ++j) {
+            if (word1[i] == word2[j])
+                dp[i][j] = dp[i - 1][j - 1];
+            else
+                dp[i][j] = min(min(dp[i - 1][j - 1] + 1, dp[i - 1][j] + 1),
+                               dp[i][j - 1] + 1);
+        }
+    }
+    return dp[n1 - 1][n2 - 1];
+}
+
+int main() { return 0; }

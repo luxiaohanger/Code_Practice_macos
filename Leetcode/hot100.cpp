@@ -2485,4 +2485,68 @@ int minDistance(string word1, string word2) {
     return dp[n1 - 1][n2 - 1];
 }
 
+// 136
+int singleNumber(vector<int>& nums) {
+    int a = nums[0];
+    for (int i = 1; i < nums.size(); ++i) a ^= nums[i];
+    return a;
+}
+
+// 169
+// 难点在于 O(1) 空间
+// 摩尔投票算法:记录当前候选元素的票数
+// 遇到不相同元素减票，相同加票
+// 票数归零时换候选元素
+int majorityElement(vector<int>& nums) {
+    int ans = nums[0];
+    int t = 1;
+    for (int i = 1; i < nums.size(); ++i) {
+        if (nums[i] != ans) {
+            if (t == 0) {
+                ans = nums[i];
+                t = 1;
+            } else
+                t--;
+        } else
+            t++;
+    }
+    return ans;
+}
+
+// 75
+void sortColors(vector<int>& nums) {
+    int n0 = 0, n1 = 0, n2 = 0;
+    for (auto x : nums) {
+        if (x == 0) n0++;
+        if (x == 1) n1++;
+        if (x == 2) n2++;
+    }
+    int idx = 0;
+    while (n0--) nums[idx++] = 0;
+    while (n1--) nums[idx++] = 1;
+    while (n2--) nums[idx++] = 2;
+}
+
+// 31
+void nextPermutation(vector<int>& nums) {}
+
+// 287
+int findDuplicate(vector<int>& nums) {
+    int slow = 0;
+    int fast = 0;
+    while (true) {
+        slow = nums[slow];
+        fast = nums[fast];
+        fast = nums[fast];
+        if (slow == fast) break;
+    }
+    slow = 0;
+    while (true) {
+        slow = nums[slow];
+        fast = nums[fast];
+        if (slow == fast) break;
+    }
+    return slow;
+}
+
 int main() { return 0; }

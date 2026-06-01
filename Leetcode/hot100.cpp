@@ -1841,7 +1841,40 @@ int findMin(vector<int>& nums) {
 }
 
 // 4
-double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {}
+int findKth(vector<int>& nums1, vector<int>& nums2, int k) {
+    int n1 = nums1.size();
+    int n2 = nums2.size();
+    int idx1 = 0;
+    int idx2 = 0;
+    while (true) {
+        if (idx1 == n1) return nums2[idx2 + k - 1];
+        if (idx2 == n2) return nums1[idx1 + k - 1];
+        if (k == 1) return min(nums1[idx1], nums2[idx2]);
+        int half = k / 2;
+        int newidx1 = min(n1, idx1 + half) - 1;
+        int newidx2 = min(n2, idx2 + half) - 1;
+        if (nums1[newidx1] <= nums2[newidx2]) {
+            // 排除 nums1[index1 ... newIndex1] 这一段
+            k -= (newidx1 - idx1 + 1);
+            idx1 = newidx1 + 1;
+        } else {
+            // 排除 nums2[index2 ... newIndex2] 这一段
+            k -= (newidx2 - idx2 + 1);
+            idx2 = newidx2 + 1;
+        }
+    }
+}
+
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    int n1 = nums1.size();
+    int n2 = nums2.size();
+    if ((n1 + n2) % 2 == 1)
+        return findKth(nums1, nums2, (n1 + n2) / 2 + 1);
+    else
+        return (findKth(nums1, nums2, (n1 + n2) / 2) +
+                findKth(nums1, nums2, (n1 + n2) / 2 + 1)) /
+               2.0;
+}
 
 // 20
 bool isValid(string s) {
@@ -2528,7 +2561,45 @@ void sortColors(vector<int>& nums) {
 }
 
 // 31
-void nextPermutation(vector<int>& nums) {}
+void nextPermutation(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 1) return;
+    int i = n - 2;
+    int j = n - 1;
+    while (i >= 0) {
+        if (nums[i] < nums[j]) break;
+        i--;
+        j--;
+    }
+
+    if (i < 0) {
+        int st = 0;
+        int en = n - 1;
+        while (st < en) {
+            swap(nums[st], nums[en]);
+            st++;
+            en--;
+        }
+        return;
+    }
+
+    int k = n - 1;
+    for (int t = n - 1; t >= j; --t) {
+        if (nums[t] > nums[i]) {
+            k = t;
+            break;
+        }
+    }
+
+    swap(nums[i], nums[k]);
+    int st = i + 1;
+    int en = n - 1;
+    while (st < en) {
+        swap(nums[st], nums[en]);
+        st++;
+        en--;
+    }
+}
 
 // 287
 int findDuplicate(vector<int>& nums) {
